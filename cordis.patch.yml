@@ -1,0 +1,198 @@
+# 火山方舟 Ark Coding Plan —— DeepSeek Harness provider 路由
+# 数据来源：本机实测校验通过的配置（2026-10）
+#
+# 为什么是 override，而不是 insert（2026-10-16 实测结论）：
+#   「insert 一个同插件的第二行」永远无法激活。@deepseek-ai/dsh-llm-pi-ai 会无条件
+#   把整套 catalog 注册进 dsh-llm 的单例 configurable-provider 目录，第二个实例必然
+#   报 `configurable provider "amazon-bedrock" is already declared` 而整行不激活。
+#   而 dsh-base 总是先挂一行 llm-pi-ai，所以第二行在任何机器上都失败
+#   （在一个全新 profile 上实测同样失败，与 provider id 是否重名无关）。
+#   结论：唯一可行的形状是 id-targeted override 那一行。
+#
+# ⚠️ 本文件整体替换 llm-pi-ai 的 config（DSH 的 patch 语义是整体替换、不深合并）。
+#    若你已有其它 pi-ai provider，请把它们一并写进下面的 providers: 字典。
+- id: llm-pi-ai
+  name: '@deepseek-ai/dsh-llm-pi-ai'
+  config:
+    providers:
+      ark-coding-plan-cn:
+        displayName: Ark Coding Plan
+        apiKeyEnv: ARK_CODING_PLAN_CN_API_KEY
+        api: anthropic-messages
+        baseURL: https://ark.cn-beijing.volces.com/api/coding
+        models:
+          - id: doubao-seed-2.1-pro
+            name: Doubao Seed 2.1 Pro (Coding Plan)
+            contextWindow: 1024000
+            maxTokens: 256000
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off:
+              low: low
+              high: high
+              max: max
+          - id: doubao-seed-2.1-lite
+            name: Doubao Seed 2.1 Lite (Coding Plan)
+            contextWindow: 1024000
+            maxTokens: 256000
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off:
+              low: low
+              high: high
+              max: max
+          - id: doubao-seed-2.1-turbo
+            name: Doubao Seed 2.1 Turbo (Coding Plan)
+            contextWindow: 256000
+            maxTokens: 131072
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off:
+              low: low
+              high: high
+              max: max
+          - id: doubao-seed-evolving
+            name: Doubao Seed Evolving (Coding Plan)
+            contextWindow: 1024000
+            maxTokens: 256000
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off:
+              low: low
+              high: high
+              max: max
+          - id: doubao-seed-2.0-lite
+            name: Doubao Seed 2.0 Lite (Coding Plan)
+            contextWindow: 256000
+            maxTokens: 131072
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off:
+              low: low
+              high: high
+              max: max
+          - id: doubao-seed-2.0-mini
+            name: Doubao Seed 2.0 Mini (Coding Plan)
+            contextWindow: 256000
+            maxTokens: 131072
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off:
+              low: low
+              high: high
+              max: max
+          - id: glm-5.3
+            name: GLM-5.3 (Coding Plan)
+            contextWindow: 1024000
+            maxTokens: 131072
+            input:
+              - text
+            reasoningEfforts:
+              low: low
+              high: high
+              max: max
+          - id: glm-5.3-flash
+            name: GLM-5.3 Flash (Coding Plan)
+            contextWindow: 1024000
+            maxTokens: 131072
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              low: low
+              high: high
+              max: max
+          - id: deepseek-v4-pro
+            name: DeepSeek V4 Pro (Coding Plan)
+            contextWindow: 1024000
+            maxTokens: 393216
+            input:
+              - text
+            reasoningEfforts:
+              off:
+              low: low
+              high: high
+              max: max
+          - id: deepseek-v4-flash
+            name: DeepSeek V4 Flash (Coding Plan)
+            contextWindow: 1024000
+            maxTokens: 393216
+            input:
+              - text
+            reasoningEfforts:
+              off:
+              low: low
+              high: high
+              max: max
+          - id: deepseek-v4.1-flash
+            name: DeepSeek V4.1 Flash (Coding Plan)
+            contextWindow: 1024000
+            maxTokens: 393216
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off:
+              low: low
+              high: high
+              max: max
+          - id: minimax-m3
+            name: MiniMax M3 (Coding Plan)
+            contextWindow: 1024000
+            maxTokens: 131072
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off:
+              low: low
+              high: high
+              max: max
+          - id: kimi-k2.8-preview
+            name: Kimi K2.8 Preview (Coding Plan)
+            contextWindow: 256000
+            maxTokens: 131072
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off:
+              low: low
+              high: high
+              max: max
+          - id: kimi-k3
+            name: Kimi K3 (Coding Plan)
+            contextWindow: 256000
+            maxTokens: 131072
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off:
+              low: low
+              high: high
+              max: max
+          - id: ark-code-latest
+            name: Ark Code Latest (Coding Plan)
+            contextWindow: 1024000
+            maxTokens: 131072
+            input:
+              - text
+              - image
+            reasoningEfforts:
+              off:
+              low: low
+              high: high
+              max: max
