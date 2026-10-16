@@ -1,0 +1,14 @@
+# 漂移检测的候选模型 id：我们猜测可能上线的下一代模型。
+# 探测到其中任何一个可用，drift workflow 就会开 issue 提醒补进 models.yml。
+# 这份清单是人工维护的，不保证能发现所有新模型 —— README 已如实说明。
+candidates:
+  - deepseek-v4.2-pro
+  - deepseek-v4.2-flash
+  - deepseek-v4.2.1-flash
+  - doubao-seed-2.2-pro
+  - doubao-seed-2.2-turbo
+  - glm-5.4
+  - glm-5.4-flash
+  - kimi-k4
+  - kimi-k3.5
+  - minimax-m4
