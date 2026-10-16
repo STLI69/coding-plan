@@ -18,8 +18,9 @@ defaultReasoningEfforts:
   high: high
   max: max
 
-# 元数据实测日期（由 scripts/probe.mjs --write 写入）
-measuredAt: 2026-10-16
+# 元数据实测日期（由 scripts/probe.mjs --write 写入）。必须加引号：
+# 不加引号 YAML 会把它解析成 Date 对象，字符串化会带时区，生成物就会随机器变化。
+measuredAt: '2026-10-16'
 
 models:
   - id: doubao-seed-2.1-pro
