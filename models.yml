@@ -1,0 +1,108 @@
+# 单一数据源。cordis.patch.yml 由 scripts/generate.mjs 从本文件生成，不要手改生成物。
+#
+# 为什么只有 Coding Plan cn 一条路由：本包只发布能实测的东西。
+# Agent Plan / 后付费 / BytePlus 我们无法验证，故不收录（见 README 诚实性说明）。
+
+route:
+  id: ark-coding-plan-cn
+  displayName: Ark Coding Plan
+  apiKeyEnv: ARK_CODING_PLAN_CN_API_KEY
+  api: anthropic-messages
+  # 故意不带 /v1：pi-ai 把 baseURL 交给 Anthropic SDK，由 SDK 拼 /v1/messages
+  baseURL: https://ark.cn-beijing.volces.com/api/coding
+
+# 未单独覆盖的模型都用这套思考等级。off: null 表示「不发 wire 值」。
+defaultReasoningEfforts:
+  off: null
+  low: low
+  high: high
+  max: max
+
+# 元数据实测日期（由 scripts/probe.mjs --write 写入）
+measuredAt: 2026-10-16
+
+models:
+  - id: doubao-seed-2.1-pro
+    name: Doubao Seed 2.1 Pro (Coding Plan)
+    contextWindow: 1024000
+    maxTokens: 393216
+    input: [text, image]
+  - id: doubao-seed-2.1-lite
+    name: Doubao Seed 2.1 Lite (Coding Plan)
+    contextWindow: 1024000
+    maxTokens: 262144
+    input: [text, image]
+  - id: doubao-seed-2.1-turbo
+    name: Doubao Seed 2.1 Turbo (Coding Plan)
+    contextWindow: 256000
+    maxTokens: 262144
+    input: [text, image]
+  - id: doubao-seed-evolving
+    name: Doubao Seed Evolving (Coding Plan)
+    contextWindow: 1024000
+    maxTokens: 262144
+    input: [text, image]
+  - id: doubao-seed-2.0-lite
+    name: Doubao Seed 2.0 Lite (Coding Plan)
+    contextWindow: 256000
+    maxTokens: 131072
+    input: [text, image]
+  - id: doubao-seed-2.0-mini
+    name: Doubao Seed 2.0 Mini (Coding Plan)
+    contextWindow: 256000
+    maxTokens: 131072
+    input: [text, image]
+  # glm-5.3 与 glm-5.3-flash 不支持关闭思考（会 HTTP 400），故覆盖为「没有 off」
+  - id: glm-5.3
+    name: GLM-5.3 (Coding Plan)
+    contextWindow: 1024000
+    maxTokens: 131072
+    input: [text]
+    reasoningEfforts:
+      low: low
+      high: high
+      max: max
+  - id: glm-5.3-flash
+    name: GLM-5.3 Flash (Coding Plan)
+    contextWindow: 1024000
+    maxTokens: 131072
+    input: [text, image]
+    reasoningEfforts:
+      low: low
+      high: high
+      max: max
+  - id: deepseek-v4-pro
+    name: DeepSeek V4 Pro (Coding Plan)
+    contextWindow: 1024000
+    maxTokens: 393216
+    input: [text, image]
+  - id: deepseek-v4-flash
+    name: DeepSeek V4 Flash (Coding Plan)
+    contextWindow: 1024000
+    maxTokens: 393216
+    input: [text, image]
+  - id: deepseek-v4.1-flash
+    name: DeepSeek V4.1 Flash (Coding Plan)
+    contextWindow: 1024000
+    maxTokens: 393216
+    input: [text, image]
+  - id: minimax-m3
+    name: MiniMax M3 (Coding Plan)
+    contextWindow: 1024000
+    maxTokens: 131072
+    input: [text, image]
+  - id: kimi-k2.8-preview
+    name: Kimi K2.8 Preview (Coding Plan)
+    contextWindow: 256000
+    maxTokens: 131072
+    input: [text, image]
+  - id: kimi-k3
+    name: Kimi K3 (Coding Plan)
+    contextWindow: 256000
+    maxTokens: 131072
+    input: [text, image]
+  - id: ark-code-latest
+    name: Ark Code Latest (Coding Plan)
+    contextWindow: 1024000
+    maxTokens: 131072
+    input: [text, image]
