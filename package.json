@@ -1,0 +1,30 @@
+{
+  "name": "@dsh-ark-agent/coding-plan",
+  "version": "1.0.0",
+  "description": "火山方舟 Ark Coding Plan provider 路由（DeepSeek Harness 配置型 bundle）。Volcengine Ark Coding Plan provider route for DeepSeek Harness.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/STLI69/coding-plan.git"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "volcengine",
+    "ark",
+    "coding-plan",
+    "llm-provider"
+  ],
+  "files": [
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}
