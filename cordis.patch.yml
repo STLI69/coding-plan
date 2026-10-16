@@ -1,6 +1,6 @@
 # 本文件由 scripts/generate.mjs 从 models.yml 生成 —— 不要手改。
 # 改模型请改 models.yml，然后跑 `npm run generate`。
-# 元数据实测日期：Fri Oct 16 2026 08:00:00 GMT+0800 (中国标准时间)（scripts/probe.mjs）
+# 元数据实测日期：2026-10-16（scripts/probe.mjs）
 
 # 1) 自己的空壳行：让本包出现在「设置 → 插件 → 插件列表」
 - insert:
