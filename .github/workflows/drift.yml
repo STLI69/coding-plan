@@ -1,0 +1,66 @@
+name: Drift
+
+# 每周探测：模型是否下架、候选模型是否上线。
+# 没有 secret 时（fork / PR）直接跳过，保证安全。
+on:
+  schedule:
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+
+      - name: Skip when no key is configured
+        id: guard
+        run: |
+          if [ -z "${{ secrets.ARK_CODING_PLAN_CN_API_KEY }}" ]; then
+            echo "no key configured - skipping"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Probe shipped models
+        if: steps.guard.outputs.skip == 'false'
+        continue-on-error: true
+        env:
+          ARK_CODING_PLAN_CN_API_KEY: ${{ secrets.ARK_CODING_PLAN_CN_API_KEY }}
+        run: node scripts/probe.mjs > shipped.txt 2>&1 || true
+
+      - name: Probe watchlist
+        if: steps.guard.outputs.skip == 'false'
+        env:
+          ARK_CODING_PLAN_CN_API_KEY: ${{ secrets.ARK_CODING_PLAN_CN_API_KEY }}
+        run: node scripts/probe.mjs --watchlist > watchlist.txt 2>&1 || true
+
+      - name: Open or update the drift issue
+        if: steps.guard.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          NEW=$(grep -E '^ok ' watchlist.txt || true)
+          GONE=$(grep -E '^GONE' shipped.txt || true)
+          if [ -z "$NEW" ] && [ -z "$GONE" ]; then
+            echo "no drift"
+            exit 0
+          fi
+          BODY=$(printf 'shipped:\n```\n%s\n```\nwatchlist:\n```\n%s\n```\n' "$(cat shipped.txt)" "$(cat watchlist.txt)")
+          NUM=$(gh issue list --label drift --state open --json number --jq '.[0].number // empty')
+          if [ -n "$NUM" ]; then
+            gh issue comment "$NUM" --body "$BODY"
+          else
+            gh issue create --title "Ark Coding Plan drift detected" --label drift --body "$BODY"
+          fi
