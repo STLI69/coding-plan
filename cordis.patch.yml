@@ -1,16 +1,14 @@
-# 火山方舟 Ark Coding Plan —— DeepSeek Harness provider 路由
-# 数据来源：本机实测校验通过的配置（2026-10）
-#
-# 为什么是 override，而不是 insert（2026-10-16 实测结论）：
-#   「insert 一个同插件的第二行」永远无法激活。@deepseek-ai/dsh-llm-pi-ai 会无条件
-#   把整套 catalog 注册进 dsh-llm 的单例 configurable-provider 目录，第二个实例必然
-#   报 `configurable provider "amazon-bedrock" is already declared` 而整行不激活。
-#   而 dsh-base 总是先挂一行 llm-pi-ai，所以第二行在任何机器上都失败
-#   （在一个全新 profile 上实测同样失败，与 provider id 是否重名无关）。
-#   结论：唯一可行的形状是 id-targeted override 那一行。
-#
-# ⚠️ 本文件整体替换 llm-pi-ai 的 config（DSH 的 patch 语义是整体替换、不深合并）。
-#    若你已有其它 pi-ai provider，请把它们一并写进下面的 providers: 字典。
+# 本文件由 scripts/generate.mjs 从 models.yml 生成 —— 不要手改。
+# 改模型请改 models.yml，然后跑 `npm run generate`。
+# 元数据实测日期：Fri Oct 16 2026 08:00:00 GMT+0800 (中国标准时间)（scripts/probe.mjs）
+
+# 1) 自己的空壳行：让本包出现在「设置 → 插件 → 插件列表」
+- insert:
+    - id: '@dsh-ark-agent/coding-plan'
+      name: '@dsh-ark-agent/coding-plan'
+
+# 2) 目标行覆盖：同插件 insert 第二行必然失败，覆盖是唯一可行的注入方式
+#    （原因见 README「为什么只有一个 patch」）
 - id: llm-pi-ai
   name: '@deepseek-ai/dsh-llm-pi-ai'
   config:
@@ -24,7 +22,7 @@
           - id: doubao-seed-2.1-pro
             name: Doubao Seed 2.1 Pro (Coding Plan)
             contextWindow: 1024000
-            maxTokens: 256000
+            maxTokens: 393216
             input:
               - text
               - image
@@ -36,7 +34,7 @@
           - id: doubao-seed-2.1-lite
             name: Doubao Seed 2.1 Lite (Coding Plan)
             contextWindow: 1024000
-            maxTokens: 256000
+            maxTokens: 262144
             input:
               - text
               - image
@@ -48,7 +46,7 @@
           - id: doubao-seed-2.1-turbo
             name: Doubao Seed 2.1 Turbo (Coding Plan)
             contextWindow: 256000
-            maxTokens: 131072
+            maxTokens: 262144
             input:
               - text
               - image
@@ -60,7 +58,7 @@
           - id: doubao-seed-evolving
             name: Doubao Seed Evolving (Coding Plan)
             contextWindow: 1024000
-            maxTokens: 256000
+            maxTokens: 262144
             input:
               - text
               - image
@@ -120,6 +118,7 @@
             maxTokens: 393216
             input:
               - text
+              - image
             reasoningEfforts:
               off:
               low: low
@@ -131,6 +130,7 @@
             maxTokens: 393216
             input:
               - text
+              - image
             reasoningEfforts:
               off:
               low: low
