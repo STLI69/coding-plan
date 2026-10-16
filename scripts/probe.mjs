@@ -155,11 +155,18 @@ export function applyMeasured(text, results, today) {
   }
   const idx = lines.findIndex((l) => /^measuredAt: /.test(l))
   if (idx !== -1) {
-    lines[idx] = `measuredAt: ${today}`
+    lines[idx] = `measuredAt: '${today}'`
   } else {
     const anchor = lines.findIndex((l) => l === 'models:')
     if (anchor !== -1) {
-      lines.splice(anchor, 0, '# 元数据实测日期（由 scripts/probe.mjs --write 写入）', `measuredAt: ${today}`, '')
+      lines.splice(
+        anchor,
+        0,
+        '# 元数据实测日期（由 scripts/probe.mjs --write 写入）。必须加引号：',
+        '# 不加引号 YAML 会把它解析成 Date 对象，字符串化会带时区，生成物就会随机器变化。',
+        `measuredAt: '${today}'`,
+        '',
+      )
     }
   }
   return lines.join('\n')
