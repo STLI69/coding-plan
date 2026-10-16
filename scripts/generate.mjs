@@ -30,6 +30,18 @@ function renderModel(m, efforts) {
 }
 
 /**
+ * 归一化实测日期。
+ * YAML 会把未加引号的 `2026-10-16` 解析成 Date，直接插值会得到带时区的本地化字符串，
+ * 生成物就会随运行机器的时区变化（CI 在 UTC、开发机在 CST，check 必挂）。
+ * @param {unknown} value measuredAt 原值
+ * @returns {string} YYYY-MM-DD
+ */
+export function isoDate(value) {
+  if (value instanceof Date) return value.toISOString().slice(0, 10)
+  return String(value).trim()
+}
+
+/**
  * 把一份 models.yml 文档渲染成 cordis.patch.yml 的完整文本。
  * @param doc models.yml 解析结果
  * @returns 生成的 patch 文本（末尾带换行）
@@ -39,7 +51,7 @@ export function renderPatch(doc) {
   const out = []
   out.push('# 本文件由 scripts/generate.mjs 从 models.yml 生成 —— 不要手改。')
   out.push('# 改模型请改 models.yml，然后跑 `npm run generate`。')
-  if (doc.measuredAt) out.push(`# 元数据实测日期：${doc.measuredAt}（scripts/probe.mjs）`)
+  if (doc.measuredAt) out.push(`# 元数据实测日期：${isoDate(doc.measuredAt)}（scripts/probe.mjs）`)
   out.push('')
   out.push('# 1) 自己的空壳行：让本包出现在「设置 → 插件 → 插件列表」')
   out.push('- insert:')
